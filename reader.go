@@ -43,6 +43,7 @@ func (d *Dictionary) mergeWord(word map[string][]*Word) {
 		}
 
 		d.Word[pinyin] = append(d.Word[pinyin], words...)
+		d.WordCount += len(words)
 	}
 }
 
