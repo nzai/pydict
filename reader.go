@@ -15,6 +15,37 @@ type Dictionary struct {
 	WordCount int
 }
 
+func (d *Dictionary) Merge(dict *Dictionary) {
+	d.mergePinyin(dict.Pinyin)
+	d.mergeWord(dict.Word)
+}
+
+func (d *Dictionary) mergePinyin(pinyin []string) {
+	pinyinDict := make(map[string]bool, len(d.Pinyin))
+	for _, word := range d.Pinyin {
+		pinyinDict[word] = true
+	}
+
+	for _, word := range pinyin {
+		if pinyinDict[word] {
+			continue
+		}
+
+		d.Pinyin = append(d.Pinyin, word)
+	}
+}
+
+func (d *Dictionary) mergeWord(word map[string][]*Word) {
+	for pinyin, words := range word {
+		_, found := d.Word[pinyin]
+		if !found {
+			d.Word[pinyin] = make([]*Word, 1)
+		}
+
+		d.Word[pinyin] = append(d.Word[pinyin], words...)
+	}
+}
+
 type Word struct {
 	Text  string
 	No    uint16
